@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Chat en Tiempo Real</title>
+  <style>
+    body { font-family: Arial; max-width: 600px; margin: 30px auto; }
+    #chat { border: 1px solid #ccc; height: 300px; overflow-y: scroll; padding: 10px; }
+    #message { width: 80%; }
+  </style>
+</head>
+<body>
+  <h2>Chat Colaborativo</h2>
+  <div id="chat"></div>
+  <input id="message" placeholder="Escribe tu mensaje...">
+  <button onclick="sendMessage()">Enviar</button>
+
+  <script>
+    const ws = new WebSocket('ws://localhost:8080');
+    let username;
+
+    ws.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      const chat = document.getElementById('chat');
+
+      if (data.type === 'welcome') {
+        username = data.username;
+        chat.innerHTML += `<div><em>Te has conectado como <b>${username}</b></em></div>`;
+      } else if (data.type === 'notification') {
+        chat.innerHTML += `<div><em>${data.message}</em></div>`;
+      } else if (data.type === 'message') {
+        chat.innerHTML += `<div><b>${data.username}:</b> ${data.text}</div>`;
+      }
+
+      chat.scrollTop = chat.scrollHeight;
+    };
+
+    function sendMessage() {
+      const input = document.getElementById('message');
+      if (input.value.trim()) {
+        ws.send(JSON.stringify({ text: input.value }));
+        input.value = '';
+      }
+    }
+  </script>
+</body>
+</html>
