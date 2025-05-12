@@ -1,0 +1,9 @@
+//Se requiere la instalacion de Node.js
+1. Descargar los 2 archivos del repositorio y almacenarlos en una sola carpeta.
+2. Abrir el CMD desde la carpeta donde se guardaron los archivos e instalar los siguientes comandos:
+    npm init -y
+    npm install ws
+    //No cerrar teminal
+3. inicia el servidor con el siguiente comando:
+    node server.js
+4. Abrir el archivo .html en cualquier navegador.
